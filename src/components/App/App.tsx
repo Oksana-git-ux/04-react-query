@@ -23,10 +23,13 @@ const App = () => {
     queryFn: () => fetchMovies({ query, page }),
     enabled: !!query,
     initialData: { movies: [], totalPages: 0 },
-    onError: (error) => {
-      toast.error(`Error loading movies: ${error.message}`);
-    }
   });
+
+  useEffect(() => {
+        if (isError) {
+            toast.error('Error loading movies. Please check your network or API token.');
+        }
+    }, [isError]);
 
   const movies = data?.movies || [];
   const totalPages = data?.totalPages || 0;
