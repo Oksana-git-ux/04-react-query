@@ -23,6 +23,7 @@ const App = () => {
     queryFn: () => fetchMovies({ query, page }),
     enabled: !!query,
     initialData: { movies: [], totalPages: 0 },
+    placeholderData: (previousData) => previousData,
   });
 
   useEffect(() => {
@@ -34,7 +35,6 @@ const App = () => {
   const movies = data?.movies || [];
   const totalPages = data?.totalPages || 0;
   
-
   const handleSearchSubmit = (newQuery: string) => {
     if (newQuery !== query) {
       setQuery(newQuery);
@@ -50,7 +50,8 @@ const App = () => {
   const handleModalClose = () => setSelectedMovie(null);
 
   const shouldRenderPagination = totalPages > 1;
-  const shouldRenderGrid = movies.length > 0 && !isLoading && !isError;
+  const shouldRenderGrid = movies.length > 0 && !isError;
+
   const showNoResultsMessage = useMemo(() => {
     return !!query && isSuccess && movies.length === 0;
   }, [query, isSuccess, movies.length]);
@@ -66,7 +67,7 @@ const App = () => {
       <SearchBar onSubmit={handleSearchSubmit} />
       
       <main>
-        {(isLoading || isFetching) && <Loader />}
+        {isFetching && <Loader />}
         {isError && <ErrorMessage />}
         
         {shouldRenderGrid && (
